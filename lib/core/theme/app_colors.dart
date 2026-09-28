@@ -12,7 +12,7 @@ abstract final class AppColors
   static const textSecondary = Color(0xFF9AA3B2);
 
   // Brand
-  static const purple = Color(0xFF6C4FFF);
+  static const purple = Color(0xFF9C7CFF);
   static const blue = Color(0xFF5B8CFF);
 
   // UI
