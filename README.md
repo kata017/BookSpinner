@@ -1,2 +1,2 @@
 # BookSpinner
-A Flutter web app that randomly selects your next book from a personal library using an interactive spin wheel.
+A fun Flutter web app that helps you decide what to read next with an interactive book spin wheel.
