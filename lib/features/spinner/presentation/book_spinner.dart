@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:book_spinner/core/theme/app_colors.dart';
+import 'package:book_spinner/models/book_category.dart';
 import 'package:flutter/material.dart';
 
 class BookSpinner extends StatefulWidget
 {
   const BookSpinner({super.key, this.onCategorySelected});
 
-  final ValueChanged<String>? onCategorySelected;
+  final ValueChanged<BookCategory>? onCategorySelected;
 
   @override
   State<BookSpinner> createState() => _BookSpinnerState();
@@ -15,21 +16,10 @@ class BookSpinner extends StatefulWidget
 
 class _BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStateMixin
 {
-  static const categories =
-  [
-    'Fiction',
-    'Fantasy',
-    'Sci-Fi',
-    'Mystery',
-    'Biography',
-    'History',
-    'Romance',
-    'Thriller',
-  ];
-
+  static const List<BookCategory> categories = BookCategory.values;
   late final AnimationController _controller;
 
-  String? _selectedCategory;
+  BookCategory? _selectedCategory;
   double _rotation = 0;
 
   @override
@@ -76,7 +66,7 @@ class _BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStat
           ),
           const SizedBox(height: 8),
           Text(
-            _selectedCategory!,
+            _selectedCategory!.displayName,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary),
           ),
           const SizedBox(height: 24),
@@ -161,7 +151,7 @@ class _Wheel extends StatelessWidget
 {
   const _Wheel({required this.categories});
 
-  final List<String> categories;
+  final List<BookCategory> categories;
 
   @override
   Widget build(BuildContext context)
@@ -180,7 +170,7 @@ class _WheelPainter extends CustomPainter
 {
   _WheelPainter({required this.categories});
 
-  final List<String> categories;
+  final List<BookCategory> categories;
 
   @override
   void paint(Canvas canvas, Size size)
@@ -206,7 +196,7 @@ class _WheelPainter extends CustomPainter
 
       final textPainter = TextPainter(
         text: TextSpan(
-          text: categories[i],
+          text: categories[i].displayName,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 13,

@@ -1,5 +1,6 @@
 import 'package:book_spinner/core/theme/app_colors.dart';
 import 'package:book_spinner/features/spinner/presentation/book_spinner.dart';
+import 'package:book_spinner/models/book_category.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget
 
 class _HomePageState extends State<HomePage>
 {
-  String? _selectedCategory;
+  BookCategory? _selectedCategory;
 
   @override
   Widget build(BuildContext context)
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage>
               },
             ),
             const SizedBox(height: 80),
-            _CategoriesSection( selectedCategory: _selectedCategory),
+            _CategoriesSection(selectedCategory: _selectedCategory),
           ],
         ),
       ),
@@ -45,7 +46,7 @@ class _HeroSection extends StatelessWidget
 {
   const _HeroSection({required this.onCategorySelected});
 
-  final ValueChanged<String> onCategorySelected;
+  final ValueChanged<BookCategory> onCategorySelected;
 
   @override
   Widget build(BuildContext context)
@@ -78,22 +79,12 @@ class _CategoriesSection extends StatelessWidget
 {
   const _CategoriesSection({this.selectedCategory});
 
-  final String? selectedCategory;
+  final BookCategory? selectedCategory;
 
   @override
   Widget build(BuildContext context)
   {
-    const categories =
-    [
-      'Fiction',
-      'Fantasy',
-      'Sci-Fi',
-      'Mystery',
-      'Biography',
-      'History',
-      'Romance',
-      'Thriller',
-    ];
+    final categories = BookCategory.values;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 1000),
@@ -110,7 +101,7 @@ class _CategoriesSection extends StatelessWidget
             [
               for (final category in categories)
                 _CategoryChip(
-                  label: category,
+                  label: category.displayName,
                   isSelected: category == selectedCategory,
                 ),
             ],
