@@ -30,9 +30,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
 
+  #fonts
   google_fonts: ^6.3.2
   cupertino_icons: ^1.0.8
+
+  #router
+  go_router: ^18.0.2
 
 dev_dependencies:
   flutter_test:
