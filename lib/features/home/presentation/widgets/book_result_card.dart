@@ -21,28 +21,23 @@ class BookResultCard extends StatelessWidget
         {
           return FadeTransition(
             opacity: animation,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 0.05),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            ),
+            child: SlideTransition(position: Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(animation), child: child),
           );
         },
         child: Container(
           key: ValueKey(book.id),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.border),
-            borderRadius: BorderRadius.circular(28),
             color: AppColors.surface,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: AppColors.border),
             boxShadow:
             [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 30,
-                offset: const Offset(0, 16),
+                color: AppColors.purple.withValues(alpha: 0.08),
+                blurRadius: 40,
+                spreadRadius: 2,
+                offset: const Offset(0, 18),
               ),
             ],
           ),
@@ -65,9 +60,12 @@ class BookResultCard extends StatelessWidget
   }
 }
 
+// -----------------------------------------------------------------------------
+// DESKTOP
+// -----------------------------------------------------------------------------
 class _DesktopBookCard extends StatelessWidget
 {
-  const _DesktopBookCard({required this.book, required this.onSpinAgain});
+  const _DesktopBookCard({required this.book, required this.onSpinAgain,});
 
   final Book book;
   final VoidCallback onSpinAgain;
@@ -83,16 +81,16 @@ class _DesktopBookCard extends StatelessWidget
         [
           _BookCover(book: book, width: 190, height: 280),
           const SizedBox(width: 32),
-          Expanded(
-            child: _BookInformation(book: book, onSpinAgain: onSpinAgain),
-          ),
+          Expanded(child: _BookInformation(book: book, onSpinAgain: onSpinAgain)),
         ],
       ),
     );
   }
-
 }
 
+// -----------------------------------------------------------------------------
+// MOBILE
+// -----------------------------------------------------------------------------
 class _MobileBookCard extends StatelessWidget
 {
   const _MobileBookCard({required this.book, required this.onSpinAgain});
@@ -110,7 +108,7 @@ class _MobileBookCard extends StatelessWidget
         children:
         [
           Center(child: _BookCover(book: book, width: 160, height: 235)),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
           _BookInformation(book: book, onSpinAgain: onSpinAgain),
         ],
       ),
@@ -118,6 +116,9 @@ class _MobileBookCard extends StatelessWidget
   }
 }
 
+// -----------------------------------------------------------------------------
+// BOOK COVER
+// -----------------------------------------------------------------------------
 class _BookCover extends StatelessWidget
 {
   const _BookCover({required this.book, required this.width, required this.height});
@@ -130,15 +131,25 @@ class _BookCover extends StatelessWidget
   Widget build(BuildContext context)
   {
     return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(18),
-        color: AppColors.surfaceSecondary,
-      ),
       width: width,
       height: height,
-      child: book.coverUrl.isEmpty ? _PlaceholderCover(book: book) : Image.network(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSecondary,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+        boxShadow:
+        [
+          BoxShadow(
+            color: AppColors.purple.withValues(alpha: 0.16),
+            blurRadius: 24,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: book.coverUrl.isEmpty
+          ? _PlaceholderCover(book: book)
+          : Image.network(
         book.coverUrl,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace)
@@ -150,6 +161,9 @@ class _BookCover extends StatelessWidget
   }
 }
 
+// -----------------------------------------------------------------------------
+// PLACEHOLDER COVER
+// -----------------------------------------------------------------------------
 class _PlaceholderCover extends StatelessWidget
 {
   const _PlaceholderCover({required this.book});
@@ -159,41 +173,90 @@ class _PlaceholderCover extends StatelessWidget
   @override
   Widget build(BuildContext context)
   {
-    return Container(
-      decoration: BoxDecoration(
+    return DecoratedBox(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors:
           [
-            AppColors.purple.withValues(alpha: 0.8),
-            AppColors.blue.withValues(alpha: 0.8),
+            AppColors.purple,
+            AppColors.pink,
+            AppColors.cyan,
+          ],
+          stops:
+          [
+            0.0,
+            0.58,
+            1.0,
           ],
         ),
       ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children:
         [
-          const Icon(Icons.auto_stories_rounded, color: Colors.white, size: 42),
-          const SizedBox(height: 20),
-          Text(
-            book.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+          // Subtle decorative glow.
+          Positioned(
+            top: -45,
+            right: -35,
+            child: Container(
+              width: 110,
+              height: 110,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.10),
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            book.author,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
+          Positioned(
+            bottom: -50,
+            left: -40,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.purple.withValues(alpha: 0.20),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:
+              [
+                Container(
+                  width: 58,
+                  height: 58,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+                  ),
+                  child: const Icon(Icons.auto_stories_rounded, color: Colors.white, size: 32),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  book.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  book.author,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.78)),
+                ),
+              ],
             ),
           ),
         ],
@@ -202,6 +265,9 @@ class _PlaceholderCover extends StatelessWidget
   }
 }
 
+// -----------------------------------------------------------------------------
+// BOOK INFORMATION
+// -----------------------------------------------------------------------------
 class _BookInformation extends StatelessWidget
 {
   const _BookInformation({required this.book, required this.onSpinAgain});
@@ -216,23 +282,8 @@ class _BookInformation extends StatelessWidget
       crossAxisAlignment: CrossAxisAlignment.start,
       children:
       [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.purple.withValues(alpha: 0.3)),
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.purple.withValues(alpha: 0.12),
-          ),
-          child: Text(
-            book.category.displayName.toUpperCase(),
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppColors.purple,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
+        _CategoryBadge(category: book.category.displayName),
+        const SizedBox(height: 18),
         Text(
           book.title,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -240,12 +291,9 @@ class _BookInformation extends StatelessWidget
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          book.author,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 6),
+        Text(book.author, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary)),
+        const SizedBox(height: 22),
         Text(
           book.description,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -254,12 +302,130 @@ class _BookInformation extends StatelessWidget
           ),
         ),
         const SizedBox(height: 28),
-        FilledButton.icon(
-          onPressed: onSpinAgain,
-          icon: const Icon(Icons.casino_rounded),
-          label: const Text('SPIN AGAIN'),
-        ),
+        _SpinAgainButton(onPressed: onSpinAgain),
       ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// CATEGORY BADGE
+// -----------------------------------------------------------------------------
+class _CategoryBadge extends StatelessWidget
+{
+  const _CategoryBadge({required this.category});
+
+  final String category;
+
+  @override
+  Widget build(BuildContext context)
+  {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.purple.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.purple.withValues(alpha: 0.45)),
+        boxShadow:
+        [
+          BoxShadow(
+            color: AppColors.purple.withValues(alpha: 0.08),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: Text(
+        category.toUpperCase(),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: AppColors.purple,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// SPIN AGAIN BUTTON
+// -----------------------------------------------------------------------------
+class _SpinAgainButton extends StatefulWidget
+{
+  const _SpinAgainButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  State<_SpinAgainButton> createState() => _SpinAgainButtonState();
+}
+
+class _SpinAgainButtonState extends State<_SpinAgainButton>
+{
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context)
+  {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_)
+      {
+        setState(()
+        {
+          _isHovered = true;
+        });
+      },
+      onExit: (_)
+      {
+        setState(()
+        {
+          _isHovered = false;
+        });
+      },
+      child: AnimatedScale(
+        scale: _isHovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 180),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: const LinearGradient(
+              colors:
+              [
+                AppColors.pink,
+                AppColors.purple,
+                AppColors.cyan,
+              ],
+            ),
+            boxShadow: _isHovered ? [BoxShadow(color: AppColors.purple.withValues(alpha: 0.30), blurRadius: 22, spreadRadius: 1)] : null,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onPressed,
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children:
+                  [
+                    const Icon(Icons.casino_rounded, color: Colors.white, size: 19),
+                    const SizedBox(width: 9),
+                    Text(
+                      'SPIN AGAIN',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.7,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
