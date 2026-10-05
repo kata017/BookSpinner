@@ -11,10 +11,10 @@ class BookSpinner extends StatefulWidget
   final ValueChanged<BookCategory>? onCategorySelected;
 
   @override
-  State<BookSpinner> createState() => _BookSpinnerState();
+  State<BookSpinner> createState() => BookSpinnerState();
 }
 
-class _BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStateMixin
+class BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStateMixin
 {
   static const List<BookCategory> categories = BookCategory.values;
   late final AnimationController _controller;
@@ -72,7 +72,7 @@ class _BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStat
           const SizedBox(height: 24),
         ],
         FilledButton.icon(
-          onPressed: _controller.isAnimating ? null : _spin,
+          onPressed: _controller.isAnimating ? null : spin,
           icon: const Icon(Icons.casino_rounded),
           label: const Text('SPIN IT'),
         ),
@@ -80,7 +80,7 @@ class _BookSpinnerState extends State<BookSpinner> with SingleTickerProviderStat
     );
   }
 
-  void _spin()
+  void spin()
   {
     if (_controller.isAnimating)
     {
