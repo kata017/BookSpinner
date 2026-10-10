@@ -66,6 +66,11 @@ flutter run -d chrome
 * [ ] Improve responsive design
 * [ ] Deploy the web application
 
+## 🔧 CI Status
+
+This project uses GitHub Actions to validate Flutter code,
+run tests and build the web application before merging pull requests.
+
 ## 👩‍💻 About
 
 BookSpinner is a personal portfolio project by **Kata-App**, exploring Flutter web development, Firebase, UI/UX design and interactive user experiences.
